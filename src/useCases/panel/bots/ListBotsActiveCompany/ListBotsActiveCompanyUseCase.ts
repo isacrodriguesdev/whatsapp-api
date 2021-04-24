@@ -1,12 +1,12 @@
 import { HttpRequest, HttpResponse } from "../../../../protocols/http"
 import { ICompanyBotsRepository } from "../../../../repositories/CompanyBotsRepository"
 
-export class GetBotsCompanyUseCase {
+export class GetBotsActiveCompanyUseCase {
   constructor(private readonly companyBotsRepository: ICompanyBotsRepository) { }
 
   async execute(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const bots = await this.companyBotsRepository.getAll(httpRequest.user.id)
+      const bots = await this.companyBotsRepository.getAllActive(httpRequest.user.id, httpRequest.body.active)
 
       const botsData = await Promise.all(
         bots.map(async (bot) => {

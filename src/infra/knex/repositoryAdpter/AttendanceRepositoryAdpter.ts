@@ -3,25 +3,6 @@ import { knexDatabase } from "../KnexDatabase";
 
 export class AttendanceRepositoryAdapter implements IAttendanceRepository {
 
-  updateReadMessages(attendmentId): Promise<any> {
-    return knexDatabase("chat_attendance")
-      .where({
-        attendment_id: attendmentId,
-        read: false,
-        sender: "client"
-      }).update("read", true)
-  }
-
-  getTotalUnreadMessages(attendmentId: string): Promise<any[]> {
-    return knexDatabase("chat_attendance")
-      .where({
-        attendment_id: attendmentId,
-        read: false,
-        sender: "client"
-      })
-      .count()
-  }
-
   existsAttendant(email: string): Promise<any> {
     return knexDatabase("operators")
       .where("email", email)
@@ -54,34 +35,53 @@ export class AttendanceRepositoryAdapter implements IAttendanceRepository {
 
   async getAttendances(operatorId: string, botId: string): Promise<any> {
 
-    const attendance = await knexDatabase('attendance')
+    const onChat = await knexDatabase('attendance')
       .where({
         "attendance.operator_id": operatorId,
         "attendance.bot_id": botId,
-        "attendance.status": "waiting"
-      }).orWhere({
-        "attendance.operator_id": operatorId,
-        "attendance.bot_id": botId,
-        "attendance.status": "ongoing"
+        "attendance.finished": false
       })
       .select(
         'attendance.*',
-        'users.name',
+        'users.first_name',
+        'users.last_name',
         'users.photo',
-        'users.chat',
+        'users.chat_identifier',
         'users.cpf',
         'users.email',
         'users.phone'
       )
       .join('users', {
         'attendance.user_id': 'users.id',
+        // 'operators_bots.bot_id': 'attendance.bot_id'
       })
-      .orderBy([{ column: 'attendance.created_at', order: 'asc' }])
+      .orderBy([{ column: 'attendance.created_at', order: 'desc' }])
+
+    const onWaiting = await knexDatabase('attendance_waiting')
+      .where({
+        "attendance_waiting.operator_id": operatorId,
+        "attendance_waiting.bot_id": botId,
+        "attendance_waiting.waiting": true
+      })
+      .select(
+        'attendance_waiting.*',
+        'users.first_name',
+        'users.last_name',
+        'users.photo',
+        'users.chat_identifier',
+        'users.cpf',
+        'users.email',
+        'users.phone'
+      )
+      .join('users', {
+        'attendance_waiting.user_id': 'users.id',
+      })
+      .orderBy([{ column: 'attendance_waiting.created_at', order: 'desc' }])
 
     return {
-      onChat: attendance.filter(at => at.status === 'ongoing'),
-      onWaiting: attendance.filter(at => at.status === 'waiting'),
+      onChat,
+      onWaiting
     }
-
   }
+
 }

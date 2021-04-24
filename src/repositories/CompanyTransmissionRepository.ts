@@ -1,9 +1,8 @@
 import { Transmission } from "../entities/Transmission";
+import { TransmissionBot } from "../entities/TransmissionBot";
 
 export interface ICompanyTransmissionRepository {
-  getOne(transmissionId: string): Promise<Transmission>
-  getAllBot(botId: string): Promise<Transmission[]>
-  getAllCompany(companyId: string): Promise<Transmission[]>
-  create(transmissionId: Transmission): Promise<any>
-  update(botId: string): Promise<any>
+  create(transmissionId: Transmission): Promise<any>;
+  getAll(companyId: string): Promise<Transmission[]>;
+  createTransmissionBots(transmissionBot: TransmissionBot): Promise<any>;
 }

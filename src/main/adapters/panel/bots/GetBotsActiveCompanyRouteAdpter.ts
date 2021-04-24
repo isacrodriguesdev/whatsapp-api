@@ -1,13 +1,15 @@
 import { Request, Response } from "express"
 import { HttpRequest, HttpResponse } from "../../../../protocols/http";
-import { GetBotsCompanyFactory } from "../../../factories/panel/bots/GetBotsCompanyFactory";
+import { GetBotsActiveCompanyFactory } from "../../../factories/panel/bots/GetBotsActiveCompanyFactory";
 
-export async function getBotsCompanyRouteAdpter(request: Request, response: Response) {
+export async function getBotsActiveCompanyRouteAdpter(request: Request, response: Response) {
 
-  const getBotsCompanyFactory = GetBotsCompanyFactory()
+  const getBotsCompanyFactory = GetBotsActiveCompanyFactory()
 
   const httpRequest: HttpRequest = {
-    body: {},
+    body: {
+      active: request.query.active
+    },
     user: {
       id: request.user.id
     }

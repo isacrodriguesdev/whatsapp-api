@@ -4,8 +4,8 @@ import { Uuid } from "../helpers/uuid/Uuidv4"
 interface INewBotConfig {
   id?: string
   bot_id: string
-  trasmission_max_users_by_send?: number
-  initial_message_active?: boolean 
+  trasmission_max_users_by_send: number
+  initial_message_active?: boolean
   initial_message_type?: string
   initial_message_file?: string
   initial_message_file_size?: string
@@ -18,7 +18,7 @@ export class BotConfig {
   readonly id?: string
   readonly bot_id: string
   public active: boolean
-  public trasmission_max_users_by_send?: number
+  public trasmission_max_users_by_send: number
   public initial_message_active?: boolean
   public initial_message_type?: string
   public initial_message_file?: string
@@ -41,4 +41,4 @@ export class BotConfig {
     this.updated_at = assign(botConfig.updated_at, new Date())
     this.created_at = assign(botConfig.created_at, new Date())
   }
-} 
+}
