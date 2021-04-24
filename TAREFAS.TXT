@@ -1,0 +1,8 @@
+
+1. Criar campanha
+2. Atualizar campanha
+3. Cancelar campanha
+4. Criar atendente
+5. Criar departamento
+6. Criar roles
+7. Abrir atendimento pelo menu 
